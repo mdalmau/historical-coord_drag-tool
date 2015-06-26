@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <title>Leaflet Drag Tool</title>
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
+        <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+        <style>
+            html,body {
+                height: 100%;
+                width: 100%;
+            }
+            #map {
+                margin-left: 5%;
+                height: 75%;
+                width: 90%;
+            }
+            #latlongbox {
+                margin-left: 5%;
+            }
+        </style>
+    </head>
+    <body>
+
+      <div id="latlongbox">
+        <h1>Coordinates:</h1>
+        <p>Latitude: <span id="latitude"></span></p>
+        <p>Longitude: <span id="longitude"></span></p>
+      </div>
+
+        <div id="map"></div> 
+
+        <script>
+
+        var maxZoom = 6;
+        var minZoom = 0;
+
+        // OSM Base Layer
+        var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        var osmLayer = L.tileLayer(osmUrl, {maxZoom: maxZoom, minZoom: minZoom});
+
+        var carey1795Url = 'http://www.indiana.edu/~kdglobal/mapstore/main-maps/carey1795/{z}/{x}/{y}.png';
+        var carey1795Layer = L.tileLayer(carey1795Url, {maxZoom: maxZoom, minZoom: minZoom, tms: true});
+
+        var carey1814Url = 'http://www.indiana.edu/~kdglobal/mapstore/main-maps/carey1814/{z}/{x}/{y}.png';
+        var carey1814Layer = L.tileLayer(carey1814Url, {maxZoom: maxZoom, minZoom: minZoom, tms: true});
+
+        var colton1856Url = 'http://www.indiana.edu/~kdglobal/mapstore/main-maps/colton1856/{z}/{x}/{y}.png';
+        var colton1856Layer = L.tileLayer(colton1856Url, {maxZoom: maxZoom, minZoom: minZoom, tms: true});
+
+        var tanner1824Url = 'http://www.indiana.edu/~kdglobal/mapstore/main-maps/tanner1824/{z}/{x}/{y}.png';
+        var tanner1824Layer = L.tileLayer(tanner1824Url, {maxZoom: maxZoom, minZoom: minZoom, tms: true});
+
+        var tanner1833Url = 'http://www.indiana.edu/~kdglobal/mapstore/main-maps/tanner1833/{z}/{x}/{y}.png';
+        var tanner1833Layer = L.tileLayer(tanner1833Url, {maxZoom: maxZoom, minZoom: minZoom, tms: true});
+
+        var map = L.map('map', {
+          center: [0, 0],
+          zoom: 2,
+          layers: [osmLayer]
+        });
+
+        var baseLayers = {
+          "Open Street Map": osmLayer,
+          "Carey 1795": carey1795Layer,
+          "Carey 1814": carey1814Layer,
+          "Colton 1856": colton1856Layer,
+          "Tanner 1824": tanner1824Layer,
+          "Tanner 1833": tanner1833Layer,
+        };
+
+        var overlays = {}; 
+        L.control.layers(baseLayers, overlays).addTo(map);
+
+
+        var testMarker = L.marker([39.1580, -86.5303], {draggable:'true'});
+        testMarker.addTo(map);
+
+        testMarker.on('dragend', function(event){
+          var marker = event.target;
+          var position = marker.getLatLng();
+          var pos = new String(position).split(",");
+          var lat = pos[0].replace("LatLng(", "");
+          var lng = pos[1].replace(")", "").replace(" ", "");
+          document.getElementById("latitude").innerHTML = lat;
+          document.getElementById("longitude").innerHTML = lng; 
+          //var msg = "Latitude: " + lat + "\nLongitude: " + lng;
+          //alert(msg);
+        });
+
+      </script> 
+    </body>
+  </html>
